@@ -7,7 +7,8 @@ import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 
 public class Formulario extends javax.swing.JFrame {
-
+    
+    private List<MCliente> usuarios = new ArrayList<>();
     /**
      * Creates new form Formulario
      */
@@ -163,9 +164,12 @@ public class Formulario extends javax.swing.JFrame {
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
         int eliminarUsuario = this.listUsuarios.getSelectedIndex();
-        //usuarios.remove(eliminarUsuario);
-        JOptionPane.showMessageDialog(rootPane, "¡El cliente se ha eliminado con éxito!");
+        MCliente cliente = usuarios.get(eliminarUsuario);
+        ClienteDao dao = new ClienteDao();
+        dao.eliminar(cliente.getId());
         mostrarListaUsuarios();
+        JOptionPane.showMessageDialog(rootPane, "¡El cliente se ha eliminado con éxito!");
+        
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void formComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentShown
@@ -180,8 +184,8 @@ public class Formulario extends javax.swing.JFrame {
     }
     
 public void mostrarListaUsuarios(){
-    ClienteDao clienteDao = new ClienteDao();
-    List<MCliente> usuarios = clienteDao.mostrar();
+    ClienteDao dao = new ClienteDao();
+    usuarios = dao.mostrar();
     DefaultListModel datosUsuario = new DefaultListModel();
     for (int i = 0; i < usuarios.size(); i++) {
         MCliente cliente = usuarios.get(i);
