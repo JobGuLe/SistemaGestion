@@ -1,6 +1,7 @@
 package com.mycompany.sistemagestion.dao;
 
 import com.mycompany.sistemagestion.model.MCliente;
+import com.mysql.jdbc.StringUtils;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +65,7 @@ public class ClienteDao {
             
             while (rst.next()) {
                 MCliente cliente = new MCliente();
-                cliente.setId(rst.getInt("id_cliente"));
+                cliente.setId(rst.getString("id_cliente"));
                 cliente.setNombre(rst.getString("nombre"));
                 cliente.setApellido(rst.getString("apellido"));
                 cliente.setEmail(rst.getString("email"));
@@ -78,7 +79,7 @@ public class ClienteDao {
         }
         return listado;
     }
-    public void eliminar(int id){
+    public void eliminar(String id){
         String connectionBD = "sistemagestion";
         String user = "root";
         String password = "";
@@ -100,6 +101,47 @@ public class ClienteDao {
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "¡Error, revisa la conexión a la base de datos!");
+        }
+    }
+    public void actualizar(MCliente cliente){
+        
+        String connectionBD = "sistemagestion";
+        String user = "root";
+        String password = "";
+        String host = "localhost";
+        String port = "3306";
+        String driver = "com.mysql.jdbc.Driver";
+        String connectionUrl = "jdbc:mysql://" + host + ":" + port + "/" + connectionBD + "?useSSL=false";
+        
+        Connection conn = null;
+        
+        try {
+            System.out.println("Conectando a la Base de Datos " + connectionUrl);
+            Class.forName(driver);
+            conn = DriverManager.getConnection(connectionUrl, user, password);
+            System.out.println("¡Conexión exitosa!");
+            
+            String sql = "UPDATE `cliente` SET `nombre` = '" + cliente.getNombre() 
+                    + "', `apellido` = '" + cliente.getApellido() 
+                    + "', `email` = '" + cliente.getEmail() 
+                    + "', `telefono` = '" + cliente.getTelefono() 
+                    + "  WHERE `cliente`.`id_cliente` = " + cliente.getId() + ";";
+            System.out.println("Se ha actualizado el registro exitosamente. " + sql);
+            
+            Statement stm = conn.createStatement();
+            stm.execute(sql);
+            
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null,"¡Error revisa la conexión a la Dase de datos!");
+        }
+    }
+
+    public void guardar(MCliente cliente) {
+        if (StringUtils.isEmptyOrWhitespaceOnly(cliente.getId())) {
+            agregar(cliente);
+        }else{
+            actualizar(cliente);
         }
     }
 }
