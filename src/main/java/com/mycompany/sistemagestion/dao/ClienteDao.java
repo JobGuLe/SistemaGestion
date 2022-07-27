@@ -78,5 +78,28 @@ public class ClienteDao {
         }
         return listado;
     }
-    
+    public void eliminar(int id){
+        String connectionBD = "sistemagestion";
+        String user = "root";
+        String password = "";
+        String host = "localhost";
+        String port = "3306";
+        String driver = "com.mysql.jdbc.Driver";
+        String connectionUrl = "jdbc:mysql://" + host + ":" + port + "/" + connectionBD + "?useSSL=false";
+        
+        Connection conn = null;
+        try {
+            Class.forName(driver);
+            conn = DriverManager.getConnection(connectionUrl, user, password);
+            
+            String sql = "DELETE FROM `cliente` WHERE `cliente`.`id_cliente` = " + id;
+            System.out.println("¡Se ha eliminado el registro exitosamente! " + sql);
+            
+            Statement stm = conn.createStatement();
+            stm.execute(sql);
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "¡Error, revisa la conexión a la base de datos!");
+        }
+    }
 }
