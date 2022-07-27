@@ -2,16 +2,16 @@ package com.mycompany.sistemagestion.model;
 
 public class MCliente {
     
-    private int id;
+    private String id;
     private String nombre;
     private String apellido;
     private String email;
     private String telefono;
     
-    public int getId(){
+    public String getId(){
         return this.id;
     }
-    public void setId(int id){
+    public void setId(String id){
         this.id = id;
     }
     public String getNombre(){

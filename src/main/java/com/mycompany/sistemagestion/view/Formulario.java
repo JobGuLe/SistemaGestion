@@ -39,6 +39,9 @@ public class Formulario extends javax.swing.JFrame {
         btnGuardar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
         lblIdUsuario = new javax.swing.JLabel();
+        btnEditar = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        lblId = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addComponentListener(new java.awt.event.ComponentAdapter() {
@@ -73,6 +76,17 @@ public class Formulario extends javax.swing.JFrame {
             }
         });
 
+        btnEditar.setText("Editar");
+        btnEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("ID:");
+
+        lblId.setText("jLabel2");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -81,15 +95,21 @@ public class Formulario extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(lblNombre)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblNombre)
+                            .addComponent(jLabel1))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtNombre))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtNombre)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lblId)
+                                .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGap(16, 16, 16)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(lblListaUsuarios)
-                                .addGap(34, 34, 34)
+                                .addGap(65, 65, 65)
                                 .addComponent(lblIdUsuario))
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
@@ -117,11 +137,19 @@ public class Formulario extends javax.swing.JFrame {
                             .addComponent(txtTelefono)
                             .addComponent(txtEmail, javax.swing.GroupLayout.Alignment.TRAILING))))
                 .addGap(17, 17, 17))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(85, 85, 85)
+                .addComponent(btnEditar)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(21, 21, 21)
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(lblId))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblNombre)
                     .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -147,7 +175,9 @@ public class Formulario extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnGuardar)
                     .addComponent(btnEliminar))
-                .addContainerGap(42, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnEditar)
+                .addContainerGap(7, Short.MAX_VALUE))
         );
 
         pack();
@@ -161,8 +191,13 @@ public class Formulario extends javax.swing.JFrame {
         cliente.setEmail(this.txtEmail.getText());
         cliente.setTelefono(this.txtTelefono.getText());
         
+        if (!lblId.getText().isEmpty()) {
+            cliente.setId(lblId.getText());
+        }
+        
         ClienteDao dao = new ClienteDao();
-        dao.agregar(cliente);
+        dao.guardar(cliente);
+        
         JOptionPane.showMessageDialog(rootPane, "¡El cliente " + cliente.getNombre() + " se guardó exitosamente!");
         limpiarTxtBox();
         mostrarListaUsuarios();
@@ -181,6 +216,18 @@ public class Formulario extends javax.swing.JFrame {
     private void formComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentShown
         mostrarListaUsuarios();
     }//GEN-LAST:event_formComponentShown
+
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
+        int eliminarUsuario = this.listUsuarios.getSelectedIndex();
+        MCliente cliente = usuarios.get(eliminarUsuario);
+        
+        this.txtNombre.setText(cliente.getNombre());
+        this.txtApellido.setText(cliente.getApellido());
+        this.txtEmail.setText(cliente.getEmail());
+        this.txtTelefono.setText(cliente.getTelefono());
+        this.lblId.setText(String.valueOf(cliente.getId()));
+        
+    }//GEN-LAST:event_btnEditarActionPerformed
 
     private void limpiarTxtBox(){
         this.txtNombre.setText(null);
@@ -235,11 +282,14 @@ public void mostrarListaUsuarios(){
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnGuardar;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblApellido;
     private javax.swing.JLabel lblEmail;
+    private javax.swing.JLabel lblId;
     private javax.swing.JLabel lblIdUsuario;
     private javax.swing.JLabel lblListaUsuarios;
     private javax.swing.JLabel lblNombre;
